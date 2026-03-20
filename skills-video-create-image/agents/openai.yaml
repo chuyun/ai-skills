@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Image API"
+  short_description: "Compose SSE-first skills.video image generation API calls"
+  default_prompt: "Use $skills-video-create-image to call SSE generation endpoints first, then fall back to polling only when needed."
