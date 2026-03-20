@@ -41,27 +41,9 @@ source ~/.zshrc
 
 ## 使用方式
 
-### 检查 API Key
-
-```bash
-python /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-video/scripts/ensure_api_key.py
-python /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-image/scripts/ensure_api_key.py
-```
-
-如果缺少 Key，脚本会输出 dashboard 地址和配置步骤。
-
 ### 调用时遇到额度不足
 
-如果 API 调用失败且怀疑是额度不足，可先分类错误：
-
-```bash
-python /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-video/scripts/handle_runtime_error.py \
-  --status 402 \
-  --body '{"message":"Insufficient credits"}'
-```
-
-然后引导用户到 `https://skills.video/dashboard`（Billing/Credits）充值。
-也可以用下面命令查询当前额度：
+如果 API 调用失败且怀疑是额度不足，可以用下面命令查询当前额度：
 
 ```bash
 curl -X GET "https://open.skills.video/api/v1/credits" \
@@ -72,10 +54,3 @@ curl -X GET "https://open.skills.video/api/v1/credits" \
 
 - `Use $skills-video-create-video to ...`
 - `Use $skills-video-create-image to ...`
-
-## 校验脚本
-
-```bash
-python3 -m py_compile /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-video/scripts/*.py
-python3 -m py_compile /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-image/scripts/*.py
-```

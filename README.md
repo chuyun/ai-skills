@@ -41,27 +41,9 @@ source ~/.zshrc
 
 ## Usage
 
-### Check API key
-
-```bash
-python /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-video/scripts/ensure_api_key.py
-python /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-image/scripts/ensure_api_key.py
-```
-
-If key is missing, the script prints dashboard URL and setup steps.
-
 ### Handle insufficient credits during calls
 
-If an API call fails and you suspect low credits, classify the runtime error:
-
-```bash
-python /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-video/scripts/handle_runtime_error.py \
-  --status 402 \
-  --body '{"message":"Insufficient credits"}'
-```
-
-Then guide user to recharge at `https://skills.video/dashboard` (Billing/Credits).
-You can check current balance with:
+If an API call fails and you suspect low credits, You can check current balance with:
 
 ```bash
 curl -X GET "https://open.skills.video/api/v1/credits" \
@@ -73,9 +55,3 @@ curl -X GET "https://open.skills.video/api/v1/credits" \
 - `Use $skills-video-create-video to ...`
 - `Use $skills-video-create-image to ...`
 
-## Validate scripts
-
-```bash
-python3 -m py_compile /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-video/scripts/*.py
-python3 -m py_compile /Users/jun/Documents/Development/blendduck/video-skills/skills-video-create-image/scripts/*.py
-```
