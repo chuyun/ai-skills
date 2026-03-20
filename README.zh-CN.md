@@ -24,7 +24,7 @@ npx skills add git@github.com:chuyun/video-skills.git
 
 首次调用前，请先配置 `SKILLS_VIDEO_API_KEY`：
 
-1. 打开 `https://skills.video/dashboard/developer` 并登录。
+1. 打开 `[https://skills.video/dashboard/developer](https://skills.video/dashboard/developer)` 并登录。
 2. 点击 `Create API Key`。
 3. 在终端导出环境变量：
 

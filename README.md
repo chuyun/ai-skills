@@ -24,7 +24,7 @@ npx skills add git@github.com:chuyun/video-skills.git
 
 Before first API call, configure `SKILLS_VIDEO_API_KEY`:
 
-1. Open `https://skills.video/dashboard/developer` and sign in.
+1. Open `[https://skills.video/dashboard/developer](https://skills.video/dashboard/developer)` and sign in.
 2. Click `Create API Key`.
 3. Export the key:
 
