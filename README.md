@@ -17,7 +17,7 @@ Currently included:
 ## Install
 
 ```bash
-npx skills add git@github.com:chuyun/ai-skills.git
+npx skills add chuyun/ai-skills
 ```
 
 ## First-time API key setup
