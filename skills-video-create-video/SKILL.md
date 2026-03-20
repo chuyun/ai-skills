@@ -14,9 +14,10 @@ Prefer deterministic extraction from `openapi.json` instead of guessing fields.
 2. Identify the active spec.
 3. Select the SSE endpoint pair for a video model.
 4. Extract request schema and generate a payload template.
-5. Execute `POST /generation/sse/...` as default.
-6. Fall back to polling only when SSE fails or is unavailable.
-7. Apply retry and failure handling.
+5. Execute `POST /generation/sse/...` as default and keep the stream open.
+6. If SSE does not reach terminal completion, poll `GET /generation/{id}` to terminal status.
+7. Return only terminal result (`COMPLETED`/`SUCCEEDED`/`FAILED`/`CANCELED`), never `IN_PROGRESS`.
+8. Apply retry and failure handling.
 
 ## 0) Check API key (first run)
 Run this check before any API call.
@@ -72,21 +73,20 @@ Use the returned `request_template` as the starting point.
 Do not add fields not defined by the endpoint schema.
 Use `default_create_endpoint` from output unless an explicit override is required.
 
-## 4) Execute SSE request (default)
-Use bearer authentication and keep the stream open.
+## 4) Execute SSE request (default) with automatic fallback
+Prefer the helper script. It creates via SSE and keeps streaming; if stream ends before terminal completion, it automatically switches to polling fallback.
 
 ```bash
-curl -N -X POST "https://open.skills.video/api/v1/generation/sse/kling-ai/kling-v2.6" \
-  -H "Authorization: Bearer $SKILLS_VIDEO_API_KEY" \
-  -H "Accept: text/event-stream" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "A cinematic dolly shot of neon city rain at night"
-  }'
+python scripts/create_and_wait.py \
+  --sse-endpoint /generation/sse/kling-ai/kling-v2.6 \
+  --payload '{"prompt":"A cinematic dolly shot of neon city rain at night"}' \
+  --poll-timeout 900 \
+  --poll-interval 3
 ```
 
 Treat SSE as the default result channel.
-Capture task `id` from stream events if present.
+Do not finish the task on `IN_QUEUE` or `IN_PROGRESS`.
+Return only after terminal result.
 
 ## 5) Fall back to polling
 Use polling only if SSE cannot be established, disconnects early, or does not reach a terminal state.
@@ -102,6 +102,17 @@ Stop polling on terminal states:
 - `COMPLETED`
 - `FAILED`
 - `CANCELED`
+
+Recommended helper:
+
+```bash
+python scripts/wait_generation.py \
+  --generation-id <GENERATION_ID> \
+  --timeout 900 \
+  --interval 3
+```
+
+Return to user only after helper emits `event=terminal`.
 
 ## 6) Handle errors and retries
 Handle these response codes for create, SSE, and fallback poll operations:
@@ -145,5 +156,7 @@ If unknown, explicitly note this in output and choose conservative client defaul
 - `scripts/ensure_api_key.py`: validate `SKILLS_VIDEO_API_KEY` and show first-run setup guidance
 - `scripts/handle_runtime_error.py`: classify runtime errors and provide recharge guidance for insufficient credits
 - `scripts/inspect_openapi.py`: extract SSE/polling endpoint pair, contract, and payload template
+- `scripts/create_and_wait.py`: create via SSE and auto-fallback to polling when stream does not reach terminal status
+- `scripts/wait_generation.py`: poll generation status until terminal completion and return final response
 - `references/open-platform-api.md`: SSE-first lifecycle, fallback polling, retry baseline
 - `references/video-model-endpoints.md`: current video endpoint snapshot from `docs.json`

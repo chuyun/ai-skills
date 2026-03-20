@@ -42,6 +42,10 @@ export SKILLS_VIDEO_API_KEY="<YOUR_API_KEY>"
 4. Poll fallback result with `GET /generation/{id}` (or model-scoped equivalent path).
 5. Stop polling at terminal status.
 
+Important:
+- `IN_QUEUE` / `IN_PROGRESS` are non-terminal. Do not return as final result.
+- Return to caller only after terminal status (`COMPLETED`, `SUCCEEDED`, `FAILED`, `CANCELED`).
+
 ## Status values from OpenAPI
 ### PredictionStatus
 - `starting`
