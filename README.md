@@ -11,8 +11,8 @@ This repository is built specifically to provide reusable `skills.video` skills.
 
 Currently included:
 
-- `skills-video-create-video`
-- `skills-video-create-image`
+- `ai-video-skills`
+- `ai-image-skills`
 
 ## Install
 
@@ -52,6 +52,5 @@ curl -X GET "https://open.skills.video/api/v1/credits" \
 
 ### Invoke skills in Codex
 
-- `Use $skills-video-create-video to ...`
-- `Use $skills-video-create-image to ...`
-
+- `Use $ai-video-skills to ...`
+- `Use $ai-image-skills to ...`

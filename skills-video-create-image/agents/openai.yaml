@@ -1,4 +1,0 @@
-interface:
-  display_name: "Create Image API"
-  short_description: "Compose SSE-first skills.video image generation API calls"
-  default_prompt: "Use $skills-video-create-image to check SKILLS_VIDEO_API_KEY first, call SSE endpoints, and if credits are insufficient guide the user to recharge before retrying."

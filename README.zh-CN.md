@@ -11,8 +11,8 @@
 
 当前包含：
 
-- `skills-video-create-video`
-- `skills-video-create-image`
+- `ai-video-skills`
+- `ai-image-skills`
 
 ## 安装
 
@@ -52,5 +52,5 @@ curl -X GET "https://open.skills.video/api/v1/credits" \
 
 ### 在 Codex 中调用技能
 
-- `Use $skills-video-create-video to ...`
-- `Use $skills-video-create-image to ...`
+- `Use $ai-video-skills to ...`
+- `Use $ai-image-skills to ...`
