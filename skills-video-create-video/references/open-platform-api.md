@@ -24,6 +24,17 @@ Authorization: Bearer <API_KEY>
 
 Security scheme in OpenAPI: `bearerAuth` (`type: http`, `scheme: bearer`).
 
+## First-time API key setup
+If `SKILLS_VIDEO_API_KEY` is not configured:
+
+1. Open `https://skills.video/dashboard/developer` and sign in.
+2. Click `Create API Key`.
+3. Export the key in your shell:
+
+```bash
+export SKILLS_VIDEO_API_KEY="<YOUR_API_KEY>"
+```
+
 ## Async generation lifecycle
 1. Submit generation with SSE endpoint `POST /generation/sse/{provider}/{model}`.
 2. Read stream events (`text/event-stream`) until terminal event.
@@ -55,6 +66,23 @@ Common documented HTTP errors on generation endpoints:
 - `401`
 - `404`
 - `422`
+
+Runtime note:
+- Credit exhaustion can appear as `402` and/or error text indicating insufficient credits.
+
+## Insufficient credits handling
+When runtime error indicates insufficient credits:
+
+1. Stop automatic retries for this request.
+2. Tell the user to recharge credits in `https://skills.video/dashboard` (Billing/Credits).
+3. Retry only after recharge.
+
+Use `GET /credits` to check remaining balance:
+
+```bash
+curl -X GET "https://open.skills.video/api/v1/credits" \
+  -H "Authorization: Bearer $SKILLS_VIDEO_API_KEY"
+```
 
 ## Retry baseline
 - Retry only transient failures (`429`, `5xx`, transport timeouts, connection resets).

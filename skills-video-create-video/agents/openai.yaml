@@ -1,4 +1,4 @@
 interface:
   display_name: "Create Video API"
   short_description: "Compose SSE-first skills.video video generation API calls"
-  default_prompt: "Use $skills-video-create-video to call SSE generation endpoints first, then fall back to polling only when needed."
+  default_prompt: "Use $skills-video-create-video to check SKILLS_VIDEO_API_KEY first, call SSE endpoints, and if credits are insufficient guide the user to recharge before retrying."

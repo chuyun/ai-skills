@@ -10,12 +10,32 @@ Use this skill to turn OpenAPI definitions into working image-generation API cal
 Prefer deterministic extraction from `openapi.json` instead of guessing fields.
 
 ## Workflow
-1. Identify the active spec.
-2. Select the SSE endpoint pair for an image model.
-3. Extract request schema and generate a payload template.
-4. Execute `POST /generation/sse/...` as default.
-5. Fall back to polling only when SSE fails or is unavailable.
-6. Apply retry and failure handling.
+1. Check API key and bootstrap environment on first use.
+2. Identify the active spec.
+3. Select the SSE endpoint pair for an image model.
+4. Extract request schema and generate a payload template.
+5. Execute `POST /generation/sse/...` as default.
+6. Fall back to polling only when SSE fails or is unavailable.
+7. Apply retry and failure handling.
+
+## 0) Check API key (first run)
+Run this check before any API call.
+
+```bash
+python scripts/ensure_api_key.py
+```
+
+If `ok` is `false`, tell the user to:
+
+- Open `https://skills.video/dashboard/developer` and log in
+- Click `Create API Key`
+- Export the key as `SKILLS_VIDEO_API_KEY`
+
+Example:
+
+```bash
+export SKILLS_VIDEO_API_KEY="<YOUR_API_KEY>"
+```
 
 ## 1) Identify the spec
 Load the most specific OpenAPI first.
@@ -88,8 +108,30 @@ Handle these response codes for create, SSE, and fallback poll operations:
 
 - `400`: request format issue
 - `401`: missing/invalid API key
+- `402`: possible payment/credits issue in runtime
 - `404`: endpoint or generation id not found
 - `422`: schema validation failed
+
+Classify non-2xx runtime errors with:
+
+```bash
+python scripts/handle_runtime_error.py \
+  --status <HTTP_STATUS> \
+  --body '<RAW_ERROR_BODY_JSON_OR_TEXT>'
+```
+
+If category is `insufficient_credits`, tell the user to recharge:
+
+- Open `https://skills.video/dashboard` and go to Billing/Credits
+- Recharge or purchase additional credits
+- Retry after recharge
+
+Optional balance check:
+
+```bash
+curl -X GET "https://open.skills.video/api/v1/credits" \
+  -H "Authorization: Bearer $SKILLS_VIDEO_API_KEY"
+```
 
 Apply retries only for transient conditions (network failure or temporary `5xx`).
 Use bounded exponential backoff (for example `1s`, `2s`, `4s`, max `16s`, then fail).
@@ -100,6 +142,8 @@ Treat rate limits and server-side timeout windows as unknown unless documented i
 If unknown, explicitly note this in output and choose conservative client defaults.
 
 ## Resources
+- `scripts/ensure_api_key.py`: validate `SKILLS_VIDEO_API_KEY` and show first-run setup guidance
+- `scripts/handle_runtime_error.py`: classify runtime errors and provide recharge guidance for insufficient credits
 - `scripts/inspect_openapi.py`: extract SSE/polling endpoint pair, contract, and payload template
 - `references/open-platform-api.md`: SSE-first lifecycle, fallback polling, retry baseline
 - `references/image-model-endpoints.md`: current image endpoint snapshot from `docs.json`
