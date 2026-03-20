@@ -17,7 +17,7 @@
 ## 安装
 
 ```bash
-npx skills add git@github.com:chuyun/video-skills.git
+npx skills add git@github.com:chuyun/ai-skills.git
 ```
 
 ## 首次配置 API Key

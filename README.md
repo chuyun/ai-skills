@@ -2,7 +2,7 @@
   <img src="./light.svg" alt="skills.video logo" width="320" />
 </p>
 
-# video-skills
+# ai-skills
 
 A collection of skills for the `skills.video` Open Platform API.
 This repository is built specifically to provide reusable `skills.video` skills.
@@ -17,7 +17,7 @@ Currently included:
 ## Install
 
 ```bash
-npx skills add git@github.com:chuyun/video-skills.git
+npx skills add git@github.com:chuyun/ai-skills.git
 ```
 
 ## First-time API key setup
